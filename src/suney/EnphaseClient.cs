@@ -1,6 +1,9 @@
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using RestSharp;
 using RestSharp.Authenticators;
+using RestSharp.Serializers.NewtonsoftJson;
 
 namespace suney
 {
@@ -9,26 +12,32 @@ namespace suney
         private const string DEMO_SYSTEM_ID = "67";
         private const string DEMO_USER_ID = "4d7a45774e6a41320a";
         private const string DEMO_API_KEY = "96a7de32fabc1dd8ff68ec43eca21c06";
-
-        private string systemId { get; set; }
-        private string userId { get; set; }
-        private string apiKey { get; set; }
-        private RestClient client { get; set; }
+        private const string BASE_URL = "https://api.enphaseenergy.com/api/v2";
+        private readonly RestClient Client;
+        private string SystemId { get; set; }
+        private string UserId { get; set; }
+        private string ApiKey { get; set; }
 
         public EnphaseClient()
         {
-            systemId = Environment.GetEnvironmentVariable("SYSTEM_ID") ?? DEMO_SYSTEM_ID;
-            userId = Environment.GetEnvironmentVariable("USER_KEY") ?? DEMO_USER_ID;
-            apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? DEMO_API_KEY;
-            client = new RestClient("https://api.enphaseenergy.com/api/v2");
-            client.Authenticator = new SimpleAuthenticator("user_id", userId, "key", apiKey);
+            SystemId = Environment.GetEnvironmentVariable("SYSTEM_ID") ?? DEMO_SYSTEM_ID;
+            UserId = Environment.GetEnvironmentVariable("USER_KEY") ?? DEMO_USER_ID;
+            ApiKey = Environment.GetEnvironmentVariable("API_KEY") ?? DEMO_API_KEY;
+            Client = new RestClient
+            {
+                BaseUrl = new Uri(BASE_URL),
+                Authenticator = new SimpleAuthenticator("user_id", UserId, "key", ApiKey)
+            };
+            Client.UseNewtonsoftJson();
+            Client.AddDefaultQueryParameter("datetime_format","iso8601");
         }
 
         public void GetSystemSummary()
         {
-            var request = new RestRequest($"systems/{systemId}/summary", DataFormat.Json);
-            SystemSummary response = client.Get<SystemSummary>(request).Data;
-            Console.WriteLine(response.last_report_at);
+            var request = new RestRequest($"systems/{SystemId}/summary", DataFormat.Json);
+            var temp = Client.Get(request).Content;
+            SystemSummary response = Client.Get<SystemSummary>(request).Data;
+            Console.WriteLine(response.LastReportAt);
         }
     }
 }

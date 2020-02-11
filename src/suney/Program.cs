@@ -6,11 +6,11 @@ namespace suney
     class Program
     {
         private static System.Timers.Timer LoopTimer;
-        private static EnphaseClient client { get; set; }
+        private static EnphaseClient Client { get; set; }
 
         static void Main(string[] args)
         {
-            client = new EnphaseClient();
+            Client = new EnphaseClient();
 
             SetTimer();
 
@@ -35,7 +35,7 @@ namespace suney
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
-            client.GetSystemSummary();
+            Client.GetSystemSummary();
         }
     }
 }
