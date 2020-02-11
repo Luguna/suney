@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Timers;
-using RestSharp;
-using RestSharp.Authenticators;
 
 namespace suney
 {
     class Program
     {
-        // Demo
-        private const string USER_KEY = "4d7a45774e6a41320a";
-        private const string API_KEY = "96a7de32fabc1dd8ff68ec43eca21c06";
-
         private static System.Timers.Timer LoopTimer;
+        private static EnphaseClient client { get; set; }
 
         static void Main(string[] args)
         {
+            client = new EnphaseClient();
+
             SetTimer();
 
             Console.WriteLine("\nPress the Enter key to exit the application...\n");
@@ -24,12 +21,6 @@ namespace suney
             LoopTimer.Dispose();
             
             Console.WriteLine("Terminating the application...");
-
-            // var client = new RestClient("https://api.enphaseenergy.com/api/v2");
-            // client.Authenticator = new SimpleAuthenticator("key", API_KEY, "user_id", USER_KEY);
-
-            // var request = new RestRequest("systems/67/summary", DataFormat.Json);
-            // SystemSummary response = client.Get<SystemSummary>(request).Data;
         }
 
         private static void SetTimer()
@@ -44,6 +35,7 @@ namespace suney
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
+            client.GetSystemSummary();
         }
     }
 }
