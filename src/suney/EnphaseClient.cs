@@ -1,6 +1,4 @@
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Serializers.NewtonsoftJson;
@@ -36,7 +34,7 @@ namespace suney
         {
             var request = new RestRequest($"systems/{SystemId}/summary", DataFormat.Json);
             var temp = Client.Get(request).Content;
-            SystemSummary response = Client.Get<SystemSummary>(request).Data;
+            Summary response = Client.Get<Summary>(request).Data;
             Console.WriteLine(response.LastReportAt);
         }
     }
