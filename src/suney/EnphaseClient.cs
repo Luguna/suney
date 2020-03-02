@@ -18,9 +18,9 @@ namespace suney
 
         public EnphaseClient()
         {
-            SystemId = Environment.GetEnvironmentVariable("SYSTEM_ID") ?? DEMO_SYSTEM_ID;
-            UserId = Environment.GetEnvironmentVariable("USER_KEY") ?? DEMO_USER_ID;
-            ApiKey = Environment.GetEnvironmentVariable("API_KEY") ?? DEMO_API_KEY;
+            SystemId = Environment.GetEnvironmentVariable("ENPHASE_SYSTEM_ID") ?? DEMO_SYSTEM_ID;
+            UserId = Environment.GetEnvironmentVariable("ENPHASE_USER_ID") ?? DEMO_USER_ID;
+            ApiKey = Environment.GetEnvironmentVariable("ENPHASE_API_KEY") ?? DEMO_API_KEY;
             Client = new RestClient
             {
                 BaseUrl = new Uri(BASE_URL),
@@ -30,12 +30,25 @@ namespace suney
             Client.AddDefaultQueryParameter("datetime_format","iso8601");
         }
 
-        public void GetSystemSummary()
+        public Summary GetSystemSummary()
         {
             var request = new RestRequest($"systems/{SystemId}/summary", DataFormat.Json);
-            var temp = Client.Get(request).Content;
-            Summary response = Client.Get<Summary>(request).Data;
-            Console.WriteLine(response.LastReportAt);
+            // var temp = Client.Get(request).Content;
+            // Summary response = Client.Get<Summary>(request).Data;
+            // Console.WriteLine(response.LastReportAt);
+            return Client.Get<Summary>(request).Data;
+        }
+
+        public ProductionStats GetStats()
+        {
+            var request = new RestRequest($"systems/{SystemId}/stats", DataFormat.Json);
+            //request.AddQueryParameter("start_at", "blah");
+            return Client.Get<ProductionStats>(request).Data;
+        }
+
+        public void GetConsumptionStats()
+        {
+             
         }
     }
 }
