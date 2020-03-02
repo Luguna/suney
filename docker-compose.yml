@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+#   suney:
+#     build: .
+  influxdb:
+    image: "influxdb:1.7-alpine"
+    environment:
+      - INFLUXDB_DB=suneydb
+    ports:
+      - 8086:8086
+  grafana:
+    image: "grafana/grafana:6.6.2"
+    ports:
+      - 3000:3000
+    volumes:
+      - type: bind
+        source: ./grafana/grafana.ini
+        target: /etc/grafana/grafana.ini
+      - type: bind
+        source: ./grafana/provisioning
+        target: /etc/grafana/provisioning
