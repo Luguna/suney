@@ -34,21 +34,26 @@ namespace suney
         {
             var request = new RestRequest($"systems/{SystemId}/summary", DataFormat.Json);
             // var temp = Client.Get(request).Content;
-            // Summary response = Client.Get<Summary>(request).Data;
-            // Console.WriteLine(response.LastReportAt);
+            // var response = Client.Get<Summary>(request).Data;
             return Client.Get<Summary>(request).Data;
         }
 
-        public ProductionStats GetStats()
+        public ProductionStats GetProductionStats(long startTime)
         {
             var request = new RestRequest($"systems/{SystemId}/stats", DataFormat.Json);
-            //request.AddQueryParameter("start_at", "blah");
+            request.AddQueryParameter("start_at", startTime.ToString());
+            //var temp = Client.Get(request).Content;
+            //var response = Client.Get<ProductionStats>(request).Data;
             return Client.Get<ProductionStats>(request).Data;
         }
 
-        public void GetConsumptionStats()
+        public ConsumptionStats GetConsumptionStats(long startTime)
         {
-             
+             var request = new RestRequest($"systems/{SystemId}/consumption_stats", DataFormat.Json);
+            request.AddQueryParameter("start_at", startTime.ToString());
+            //var temp = Client.Get(request).Content;
+            //var response = Client.Get<ConsumptionStats>(request).Data;
+            return Client.Get<ConsumptionStats>(request).Data;
         }
     }
 }
